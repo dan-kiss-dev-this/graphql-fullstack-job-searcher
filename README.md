@@ -1,3 +1,3 @@
 # GraphQL Job Board
 
-Sample application used in the GraphQL by Example course.
+$npm start in client and server folders to run project, to see graphql playground go to http://localhost:9000/graphql to see front end go to http://localhost:3000/.
