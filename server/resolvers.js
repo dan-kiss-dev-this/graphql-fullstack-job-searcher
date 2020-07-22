@@ -10,14 +10,16 @@ const Query = {
 
 const Mutation = {
   createJob: (parentRoot, { input }, context) => {
-    // context used to check user authentication provided by app not graphql
-    console.log(14,context)
-    if(!context.user) {
+    // context used to check user authentication provided by app not graphql    
+    console.log('14, context.user :>> ', context.user);
+    const { user } = context;
+    if (!context.user) {
+      console.log('16 :>> ', 16);
       throw new Error('Unauthorized');
     }
     //createJob: (parentRoot, graphQLObjectWithArguments) => {
     //we pass input in plain below as input is already an object
-    const id = db.jobs.create(input);
+    const id = db.jobs.create({ ...input, companyId: user.companyId })
     // creating a job returns the id then we use the id to get the job
     return db.jobs.get(id);
   }

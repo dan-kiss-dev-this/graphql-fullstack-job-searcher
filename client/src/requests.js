@@ -1,16 +1,22 @@
 // used for graphql requests
 
+import { isLoggedIn, getAccessToken } from "./auth";
+
 const endpointURL = 'http://localhost:9000/graphql'
 
 export async function graphqlRequest(query, variables = {}) {
-  const response = await fetch(endpointURL, {
+  const request = {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       query: query,
       variables: variables
     })
-  });
+  }
+  if (isLoggedIn()) {
+    request.headers['authorization'] = 'Bearer ' + getAccessToken();
+  }
+  const response = await fetch(endpointURL, request);
   const responseBody = await response.json();
   if (responseBody.errors) {
     const message = responseBody.errors.map(error => error.message).join('\n')
@@ -19,7 +25,7 @@ export async function graphqlRequest(query, variables = {}) {
   return responseBody.data;
 }
 
-export async function createJob(input){
+export async function createJob(input) {
   const mutation = `mutation CreateJob($input: CreateJobInput){
     job: createJob(input: $input) {
       id
@@ -30,7 +36,7 @@ export async function createJob(input){
       }
     }
   }`;
-  const {job} = await graphqlRequest(mutation, {input});
+  const { job } = await graphqlRequest(mutation, { input });
   return job;
 }
 
