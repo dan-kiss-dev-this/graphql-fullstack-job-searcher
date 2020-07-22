@@ -9,12 +9,16 @@ const Query = {
 }
 
 const Mutation = {
-  createJob: (parentRoot, { input }) => {
-    // createJob: (parentRoot, graphQLObjectWithArguments) => {
-    // we pass input in plain below as input is already an object
+  createJob: (parentRoot, { input }, context) => {
+    // context used to check user authentication provided by app not graphql
+    console.log(14,context)
+    if(!context.user) {
+      throw new Error('Unauthorized');
+    }
+    //createJob: (parentRoot, graphQLObjectWithArguments) => {
+    //we pass input in plain below as input is already an object
     const id = db.jobs.create(input);
     // creating a job returns the id then we use the id to get the job
-    console.log(17, db.jobs.get(id));
     return db.jobs.get(id);
   }
 }
