@@ -12,7 +12,7 @@ export class JobDetail extends Component {
   async componentDidMount() {
     const { jobId } = this.props.match.params;
     console.log(15,'jobId', jobId)
-    const job = await loadJob("rJKAbDd_z");
+    const job = await loadJob(jobId);
     await console.log(16,job);
     await this.setState({ job });
   }
